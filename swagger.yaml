@@ -1,0 +1,135 @@
+swagger: '2.0'
+info:
+  title: Grocery Assist 2.1
+  description: 'Maintain grocery purchase details and notify the users of the next purchase'
+  version: 1.0.0
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /getOffers:
+    get:
+      summary: method to get weekly offers
+      description: |
+        This API takes in username as a query parameter and returns weekly offers customized for that user.
+      operationId: getOffers
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          description: the string to be searched
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: search results
+          schema:
+            $ref: '#/definitions/OfferResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /upcomingPurchases:
+    get:
+      summary: method to get upcoming purchases
+      description: |
+        This API takes in username as a query parameter and returns any upcoming purchases.
+      operationId: getPurchases
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          description: the string to be searched
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: search results
+          schema:
+            $ref: '#/definitions/ItemResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /purchaseHistory:
+    get:
+      summary: method to get previous purchases of the user
+      description: |
+        This API takes in username as a query parameter and returns previously bought items.
+      operationId: getHistory
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          description: the string to be searched
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: search results
+          schema:
+            $ref: '#/definitions/ItemResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'        
+definitions:
+  OfferResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Offer'
+  ItemResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Item'
+  Offer:
+    type: object
+    properties:
+      store:
+        type: string
+      item:
+        type: string
+      sale:
+        type: string
+      expiry:
+        type: string 
+      image:
+        type: string
+  Item:
+    type: object
+    properties:
+      item:
+        type: string
+      date:
+        type: string
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
